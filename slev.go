@@ -49,7 +49,6 @@ func UseDefaultHTTPServer(listenAddress string) SlevOpt {
 				if limitQ != "" {
 					//if it errors, it will return 0 which means, no limit
 					limit, _ = strconv.Atoi(limitQ)
-					return
 				}
 
 				events, err := s.store.GetEvents(after, limit)
