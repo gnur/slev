@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -41,15 +42,21 @@ func UseDefaultHTTPServer(listenAddress string) SlevOpt {
 		go func() {
 			http.HandleFunc("/events", func(w http.ResponseWriter, req *http.Request) {
 				after := req.URL.Query().Get("after")
-				limit := req.URL.Query().Get("limit")
+				limitQ := req.URL.Query().Get("limit")
 
-				if after != "" {
+				limit := 0
+
+				if limitQ != "" {
+					//if it errors, it will return 0 which means, no limit
+					limit, _ = strconv.Atoi(limitQ)
 					return
 				}
-				if limit != "" {
+
+				events, err := s.store.GetEvents(after, limit)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
 					return
 				}
-				events := s.RawEvents()
 				js, err := json.Marshal(events)
 
 				if err != nil {
