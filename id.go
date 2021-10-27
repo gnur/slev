@@ -10,11 +10,8 @@ import (
 )
 
 const (
-	maxTimestamp = "281474976710655"
-	maxRandom    = "1208925819614629174706175"
-	maxTimeflake = "340282366920938463463374607431768211455"
-	BASE62       = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-	HEX          = "0123456789abcdef"
+	BASE62 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+	HEX    = "0123456789abcdef"
 )
 
 type slevID struct {
@@ -26,7 +23,6 @@ type slevID struct {
 	rand   big.Int
 }
 
-// calculate and return the internal timestamp from big.Int
 func (f *slevID) Timestamp() int64 {
 	t := new(big.Int)
 	t.Rsh(&f.Int, 80)
@@ -59,7 +55,6 @@ func NewID() (string, error) {
 }
 
 func FromBytes(fromBytes []byte) (*slevID, error) {
-	const op = "timeflake:FromBytes"
 	if len(fromBytes) != 16 {
 		return nil, errors.New("FromBytes should be len 16")
 	}
